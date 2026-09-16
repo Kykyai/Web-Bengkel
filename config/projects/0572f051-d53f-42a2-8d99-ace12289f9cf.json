@@ -1,0 +1,15 @@
+{
+  "id": "0572f051-d53f-42a2-8d99-ace12289f9cf",
+  "name": "ma-annur",
+  "projectResources": {
+    "resources": [
+      {
+        "gitFolder": {
+          "folderUri": "file:///c%3A/Users/leaf/.gemini/antigravity/scratch/ma-annur",
+          "allowWrite": true
+        }
+      }
+    ]
+  },
+  "updatedAt": "2026-04-07T11:04:08.387940700Z"
+}
