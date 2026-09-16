@@ -1,0 +1,16 @@
+# Dependencies
+node_modules/
+backend/node_modules/
+
+# Environment variables
+.env
+.env.local
+backend/.env
+
+# System & IDE folders
+antigravity/
+antigravity-backup/
+antigravity-browser-profile/
+antigravity-ide/
+config/
+GEMINI.md
