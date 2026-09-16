@@ -1,11 +1,9 @@
 // ============================================
-//  BengkelPro - Authentication Manager
+//  BengkelPro - Authentication Manager (Admin Only)
 // ============================================
 
 const DEFAULT_USERS = [
-    { id: 'usr_1', username: 'admin', password: 'admin123', name: 'Budi Santoso', role: 'Administrator', avatar: '👑' },
-    { id: 'usr_2', username: 'kasir', password: 'kasir123', name: 'Siti Rahayu', role: 'Kasir', avatar: '🧾' },
-    { id: 'usr_3', username: 'mekanik', password: 'mekanik123', name: 'Agus Prasetyo', role: 'Mekanik', avatar: '👷' }
+    { id: 'usr_1', username: 'admin', password: 'admin123', name: 'Budi Santoso', role: 'Administrator', avatar: '👑' }
 ];
 
 const AUTH_KEY = 'bp_session_user';
@@ -47,6 +45,9 @@ const AUTH = {
                     this.setUser(data.user, remember);
                     return { success: true, message: data.message, user: data.user };
                 }
+            } else if (response.status === 401) {
+                const data = await response.json();
+                return { success: false, message: data.message || 'Username atau password salah!' };
             }
         } catch (e) {
             console.log('Backend API unavailable, falling back to local auth');
@@ -60,7 +61,7 @@ const AUTH = {
             return { success: true, message: `Selamat datang kembali, ${user.name}!`, user: userWithoutPassword };
         }
 
-        return { success: false, message: 'Username atau password tidak valid!' };
+        return { success: false, message: 'Hanya akun Admin yang diizinkan masuk ke sistem!' };
     },
 
     logout() {
@@ -81,20 +82,9 @@ const AUTH = {
         if (nameEl) nameEl.textContent = user.name;
         if (roleEl) roleEl.textContent = user.role;
 
-        // Role-based navigation visibility
-        const role = user.role;
+        // Show all menus for Admin
         document.querySelectorAll('.nav-item').forEach(el => {
-            const page = el.dataset.page;
-            if (role === 'Mekanik') {
-                const allowed = ['dashboard', 'workorder', 'kendaraan', 'sparepart', 'mekanik'];
-                el.style.display = allowed.includes(page) ? 'flex' : 'none';
-            } else if (role === 'Kasir') {
-                const allowed = ['dashboard', 'workorder', 'pelanggan', 'sparepart', 'invoice'];
-                el.style.display = allowed.includes(page) ? 'flex' : 'none';
-            } else {
-                // Administrator / Owner sees everything
-                el.style.display = 'flex';
-            }
+            el.style.display = 'flex';
         });
     }
 };
@@ -120,12 +110,12 @@ function renderLoginOverlay() {
         <form id="login-form" onsubmit="handleLoginSubmit(event)">
           <div class="form-group">
             <label for="login-username">Username</label>
-            <input type="text" id="login-username" class="form-control" placeholder="Masukkan username" required autofocus value="admin" />
+            <input type="text" id="login-username" class="form-control" placeholder="Masukkan username admin" required autofocus value="admin" />
           </div>
 
           <div class="form-group">
             <label for="login-password">Password</label>
-            <input type="password" id="login-password" class="form-control" placeholder="Masukkan password" required value="admin123" />
+            <input type="password" id="login-password" class="form-control" placeholder="Masukkan password admin" required value="admin123" />
           </div>
 
           <div class="login-options">
@@ -138,21 +128,6 @@ function renderLoginOverlay() {
             Masuk ke Sistem 🚀
           </button>
         </form>
-
-        <div class="login-presets">
-          <p class="presets-title">Atau Pilih Akun Demo Fast-Login:</p>
-          <div class="preset-buttons">
-            <button class="preset-btn" onclick="quickLogin('admin', 'admin123')">
-              <span>👑</span> Admin / Owner
-            </button>
-            <button class="preset-btn" onclick="quickLogin('kasir', 'kasir123')">
-              <span>🧾</span> Kasir
-            </button>
-            <button class="preset-btn" onclick="quickLogin('mekanik', 'mekanik123')">
-              <span>👷</span> Mekanik
-            </button>
-          </div>
-        </div>
 
         <div class="login-footer">
           © 2026 BengkelPro Management System
@@ -185,17 +160,5 @@ async function handleLoginSubmit(e) {
         if (typeof navigateTo === 'function') navigateTo('dashboard');
     } else {
         showToast(result.message, 'danger');
-    }
-}
-
-async function quickLogin(username, password) {
-    document.getElementById('login-username').value = username;
-    document.getElementById('login-password').value = password;
-    const result = await AUTH.login(username, password, true);
-    if (result.success) {
-        showToast(result.message, 'success');
-        document.getElementById('login-modal-overlay').classList.remove('active');
-        AUTH.applyRolePermissions(result.user);
-        if (typeof navigateTo === 'function') navigateTo('dashboard');
     }
 }

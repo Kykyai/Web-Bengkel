@@ -14,11 +14,9 @@ app.use(express.json());
 // Serve Static Frontend Files
 app.use(express.static(path.join(__dirname, '../../frontend')));
 
-// Sample Accounts Data
+// Accounts Data (Admin Only)
 const ACCOUNTS = [
-    { id: 'usr_1', username: 'admin', password: 'admin123', name: 'Budi Santoso', role: 'Administrator', avatar: '👑' },
-    { id: 'usr_2', username: 'kasir', password: 'kasir123', name: 'Siti Rahayu', role: 'Kasir', avatar: '🧾' },
-    { id: 'usr_3', username: 'mekanik', password: 'mekanik123', name: 'Agus Prasetyo', role: 'Mekanik', avatar: '👷' }
+    { id: 'usr_1', username: 'admin', password: 'admin123', name: 'Budi Santoso (Admin)', role: 'Administrator', avatar: '👑' }
 ];
 
 // API Health Check Route
