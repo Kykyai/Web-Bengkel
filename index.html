@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BengkelPro - Sistem Manajemen Bengkel Profesional</title>
+  <meta name="description"
+    content="Sistem manajemen bengkel otomotif profesional. Kelola pelanggan, kendaraan, servis, stok sparepart, dan laporan keuangan dalam satu platform." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="icon" type="image/svg+xml"
+    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔧</text></svg>" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+
+<body>
+  <div id="app">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-brand">
+        <div class="brand-icon">🔧</div>
+        <div class="brand-text">
+          <span class="brand-name">BengkelWeb</span>
+          <span class="brand-tagline">Management System</span>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section-label">MENU UTAMA</div>
+        <a class="nav-item active" href="#" data-page="dashboard" onclick="navigateTo('dashboard'); return false;">
+          <span class="nav-icon">📊</span>
+          <span class="nav-label">Dashboard</span>
+        </a>
+        <a class="nav-item" href="#" data-page="workorder" onclick="navigateTo('workorder'); return false;">
+          <span class="nav-icon">🔧</span>
+          <span class="nav-label">Work Order</span>
+          <span class="nav-badge" id="badge-workorder"></span>
+        </a>
+        <a class="nav-item" href="#" data-page="pelanggan" onclick="navigateTo('pelanggan'); return false;">
+          <span class="nav-icon">👥</span>
+          <span class="nav-label">Pelanggan</span>
+        </a>
+        <a class="nav-item" href="#" data-page="kendaraan" onclick="navigateTo('kendaraan'); return false;">
+          <span class="nav-icon">🏍️</span>
+          <span class="nav-label">Kendaraan</span>
+        </a>
+
+        <div class="nav-section-label">OPERASIONAL</div>
+        <a class="nav-item" href="#" data-page="sparepart" onclick="navigateTo('sparepart'); return false;">
+          <span class="nav-icon">📦</span>
+          <span class="nav-label">Stok Sparepart</span>
+          <span class="nav-badge danger" id="badge-sparepart"></span>
+        </a>
+        <a class="nav-item" href="#" data-page="mekanik" onclick="navigateTo('mekanik'); return false;">
+          <span class="nav-icon">👷</span>
+          <span class="nav-label">Mekanik</span>
+        </a>
+        <a class="nav-item" href="#" data-page="invoice" onclick="navigateTo('invoice'); return false;">
+          <span class="nav-icon">🧾</span>
+          <span class="nav-label">Invoice & Kasir</span>
+        </a>
+
+        <div class="nav-section-label">ANALITIK</div>
+        <a class="nav-item" href="#" data-page="laporan" onclick="navigateTo('laporan'); return false;">
+          <span class="nav-icon">📈</span>
+          <span class="nav-label">Laporan</span>
+        </a>
+
+        <div class="nav-section-label">SISTEM</div>
+        <a class="nav-item" href="#" data-page="pengaturan" onclick="navigateTo('pengaturan'); return false;">
+          <span class="nav-icon">⚙️</span>
+          <span class="nav-label">Pengaturan</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="sidebar-user">
+          <div class="user-avatar">A</div>
+          <div class="user-info">
+            <span class="user-name" id="sidebar-owner-name">Admin</span>
+            <span class="user-role">Administrator</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="main-wrapper">
+      <!-- Header -->
+      <header class="top-header">
+        <div class="header-left">
+          <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
+          <div class="breadcrumb">
+            <span id="page-title">Dashboard</span>
+          </div>
+        </div>
+        <div class="header-right">
+          <div class="header-date" id="header-date"></div>
+          <div class="header-notifications">
+            <button class="notif-btn" onclick="toggleNotif()">
+              🔔
+              <span class="notif-dot" id="notif-dot"></span>
+            </button>
+            <div class="notif-dropdown" id="notif-dropdown">
+              <div class="notif-title">Notifikasi</div>
+              <div id="notif-list"></div>
+            </div>
+          </div>
+          <div class="shop-name" id="header-shop-name">BengkelWeb</div>
+        </div>
+      </header>
+
+      <!-- Page Content -->
+      <main class="content-area" id="content-area">
+        <!-- Pages will be rendered here -->
+      </main>
+    </div>
+  </div>
+
+  <!-- Modal Overlay -->
+  <div class="modal-overlay" id="modal-overlay" onclick="closeModal()"></div>
+
+  <!-- Modal -->
+  <div class="modal" id="main-modal">
+    <div class="modal-header">
+      <h3 class="modal-title" id="modal-title">Modal</h3>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Print Frame -->
+  <iframe id="print-frame" style="display:none;"></iframe>
+
+  <!-- Scripts -->
+  <script src="js/data.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/pages/dashboard.js"></script>
+  <script src="js/pages/workorder.js"></script>
+  <script src="js/pages/pelanggan.js"></script>
+  <script src="js/pages/kendaraan.js"></script>
+  <script src="js/pages/sparepart.js"></script>
+  <script src="js/pages/mekanik.js"></script>
+  <script src="js/pages/invoice.js"></script>
+  <script src="js/pages/laporan.js"></script>
+  <script src="js/pages/pengaturan.js"></script>
+  <script src="js/app.js"></script>
+</body>
+
+</html>
