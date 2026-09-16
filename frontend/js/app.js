@@ -92,7 +92,14 @@ function initApp() {
     setInterval(updateClock, 60000);
     updateShopInfo();
     updateBadges();
-    navigateTo('dashboard');
+
+    const user = AUTH.getUser();
+    if (!user) {
+        renderLoginOverlay();
+    } else {
+        AUTH.applyRolePermissions(user);
+        navigateTo('dashboard');
+    }
 }
 
 // Start app when DOM is ready
