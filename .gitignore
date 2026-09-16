@@ -1,3 +1,10 @@
+# Dependencies
+node_modules/
+
+# Environment variables
+.env
+.env.local
+
 # System & IDE folders
 antigravity/
 antigravity-backup/
